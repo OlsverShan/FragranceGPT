@@ -9,7 +9,7 @@
 ## 项目结构
 
 ```
-dsm-firmenich_work/
+FragranceGPT/
 ├── src/                        # 核心库（新）
 │   ├── __init__.py
 │   ├── data.py                 # 数据加载与预处理

@@ -138,7 +138,7 @@ def _run_recommendation_pipeline(accords: list[str]) -> dict:
 async def lifespan(app: FastAPI):
     """Ensure API key is set and preload data systems on startup."""
     if not os.environ.get("DEEPSEEK_API_KEY"):
-        os.environ["DEEPSEEK_API_KEY"] = "sk-5e871d95b53d4610a967488ec143fae9"
+        raise RuntimeError("DEEPSEEK_API_KEY environment variable not set")
     # Preload data systems so first user request is fast
     loop = asyncio.get_event_loop()
     await loop.run_in_executor(None, _load_data_systems)

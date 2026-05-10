@@ -24,9 +24,9 @@ from app.async_runner import (start_persona_ws, start_persona_rest, start_rest_t
                                get_progress, reset_task, poll_loop)
 from app.history_manager import save_entry, load_history, clear_history, delete_entry
 
-# ── API key (from project settings) ───────────────────────────
+# ── API key ────────────────────────────────────────────────────
 if not os.environ.get("DEEPSEEK_API_KEY"):
-    os.environ["DEEPSEEK_API_KEY"] = "sk-5e871d95b53d4610a967488ec143fae9"
+    raise RuntimeError("DEEPSEEK_API_KEY environment variable not set")
 
 # ── History auto-save dedup ─────────────────────────────────────
 _SAVED: set[str] = set()

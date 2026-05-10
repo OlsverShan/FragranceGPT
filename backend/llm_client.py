@@ -45,8 +45,7 @@ async def get_client() -> AsyncOpenAI:
         return _client
     api_key = os.environ.get("DEEPSEEK_API_KEY")
     if not api_key:
-        api_key = "sk-5e871d95b53d4610a967488ec143fae9"
-        os.environ["DEEPSEEK_API_KEY"] = api_key
+        raise RuntimeError("DEEPSEEK_API_KEY environment variable not set")
     _client = AsyncOpenAI(api_key=api_key, base_url=DEEPSEEK_BASE)
     return _client
 
