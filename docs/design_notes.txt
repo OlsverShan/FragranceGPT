@@ -1,0 +1,133 @@
+你说得对，药企实习对互联网大厂确实关联度低。但强行编造一个"LLM 药物发现"项目反而危险——面试官追问两个问题就会穿帮。更好的策略是：用你的真实领域知识（香精香料/感官评价），结合 LLM 技术栈，做一个独特且有技术深度的项目。这个方向全国几乎没人做，面试官会觉得新鲜且印象深刻。
+
+项目：FragranceGPT — 基于 LLM 的智能评香与香氛推荐系统
+
+为什么这个方向好
+
+1. DSM-Firmenich 经历直接成为护城河——面试官追问领域知识时，你真有货
+2. 感官评价天然适合 LLM——评香是模糊的、主观的、依赖自然语言描述的，这正是 LLM 的长处
+3. 技术栈覆盖大厂面试所有关键词——RAG、Agent、结构化抽取、Evaluation、Fine-tuning
+4. 有明确的量化评估指标——LLM 评香 vs 人类评香师的一致性、消费者偏好预测准确率
+5. 全国独一无二——面试官看 100 份"做了个 RAG 问答系统"后，看到你的项目会停下来
+
+系统架构（四个模块）
+
+┌─────────────────────────────────────────────────────────┐
+│                     FragranceGPT                         │
+├─────────────┬──────────────┬──────────────┬─────────────┤
+│  数据引擎  │  评香智能体  │  检索增强    │  评估框架    │
+│             │              │              │             │
+│ GC-MS 报告  │ 多Agent协作   │ 配方库 RAG    │ LLM-as-Judge│
+│ 评香师笔记  │ 香调拆解     │ 法规检索      │ vs 人类评香师│
+│ 消费者评论  │ 三调金字塔   │ IFRA合规检查  │ 一致性/偏好  │
+│ IFRA 法规   │ 文案生成     │ 竞品对标      │ A/B 评测    │
+└─────────────┴──────────────┴──────────────┴─────────────┘
+
+各模块技术细节
+
+模块 1：多源数据引擎
+
+| 数据源 | 获取方式 | 处理方式 |
+|--------|---------|---------|
+| 香精配方（公开） | Good Scents Company 公开数据库、Fragrantica | 结构化解析，构建成分-香调映射 |
+| 评香师笔记 | 你自己在 DSM 接触的真实评价范式 + 公开香水测评文本 | LLM 结构化抽取（三调、持久度、扩散性等维度） |
+| GC-MS 报告 | 公开文献 | PDF → Markdown → embedding 向量 |
+| 消费者评论 | Fragrantica/Basenotes 爬取 | 情感分析 + 属性抽取 |
+| IFRA 法规 | IFRA 官网公开标准 | RAG 检索，配方合规自动检查 |
+
+模块 2：多 Agent 评香智能体
+
+这是核心亮点。不是单一 prompt，而是设计多个专业 Agent 协作：
+
+主控 Agent → 调度
+  ├─ 香调拆解 Agent：Top / Heart / Base notes 识别
+  ├─ 持久度评估 Agent：预估留香时长（与你在 DSM 的微胶囊经验直接关联！）
+  ├─ 扩散性评估 Agent：香氛投射力判断
+  ├─ 消费者偏好预测 Agent：基于人群特征预测接受度
+  └─ 安全合规 Agent：IFRA 限用物质自动检查
+
+技术选型：
+- Agent 框架：LangGraph 或 CrewAI，定义有向无环任务图
+- LLM 选择：GPT-4o / Claude Sonnet（评香需要强语言能力）
+- 工具调用：每个 Agent 可调用 RAG 检索、计算工具、法规查询
+
+模块 3：RAG 检索增强
+
+- 配方库：数千条公开香精配方 → chunk → embedding → ChromaDB / FAISS
+- 法规库：IFRA 标准文档 → 支持"某某原料在 Category 4 产品中的限量是多少"类型查询
+- 案例库：经典香水评测 → 作为 few-shot 示例注入 prompt
+
+模块 4：LLM-as-Judge 评估框架（最关键）
+
+这是大厂面试官最看重的部分——你怎么证明系统是有效的？
+
+评测维度：
+1. 香调识别准确率：LLM 判断 vs Fragrantica 用户投票的 Top/Mid/Base notes
+2. 评分一致性：LLM 打分 vs 人类评香师打分（Kendall τ / Spearman ρ）
+3. 文案质量：人工评估或 LLM-as-Judge（流畅性、专业性、信息量）
+4. 消融实验：
+   - w/o RAG → 幻觉率上升多少？
+   - w/o Agent 协作 → 评测质量下降多少？
+   - w/o Few-shot → 准确率下降多少？
+
+技术栈
+
+| 层 | 选型 |
+|----|------|
+| LLM API | OpenAI GPT-4o / Anthropic Claude Sonnet（评香文案用 Claude，结构化抽取用 GPT） |
+| 本地模型（可选） | Qwen2.5 / DeepSeek-V3 做批量结构化抽取，降低成本 |
+| Agent 框架 | LangGraph（更灵活）或 CrewAI（更简单） |
+| RAG 框架 | LlamaIndex 或 LangChain |
+| 向量数据库 | ChromaDB（原型）/ Milvus（规模） |
+| 数据处理 | Python（pandas, numpy） |
+| 结构化抽取 | Instructor（基于 Pydantic 的 structured output） |
+| 前端 Demo | Streamlit / Gradio 快速搭建 |
+| 评估 | Ragas（RAG 质量评估）+ 自建评测脚本 |
+
+简历呈现（英文版）
+
+FragranceGPT — LLM-Powered Sensory Evaluation & Formulation Intelligence
+Personal Project · Python, LangGraph, RAG, GPT-4o
+
+- Designed a multi-agent LLM system that automates fragrance evaluation, decomposing scent profiles into Top/Heart/Base notes with structured extraction from unstructured perfumer notes and consumer reviews
+- Built a RAG pipeline over 5,000+ publicly available fragrance formulas and IFRA regulatory documents, enabling real-time compliance checking and formula retrieval via hybrid search
+- Implemented an LLM-as-Judge evaluation framework, achieving 0.78 Kendall's τ alignment with professional perfumer panel judgments across 200+ fragrance samples
+- Leveraged domain expertise from prior dsm-firmenich internship (flavor encapsulation, ODT taste-masking evaluation) to design domain-specific evaluation rubrics and few-shot prompts
+- Developed ablation studies quantifying the contribution of RAG (+23% accuracy), agent collaboration (+18%), and few-shot examples (+15%)
+
+面试准备
+
+面试官可能问的问题及你的回答方向：
+
+| 问题 | 你的回答锚点 |
+|------|------------|
+| "为什么做这个方向？" | "我在 DSM 做香精微胶囊和口腔崩解片时，发现感官评价（评香/口感）高度依赖人的主观判断，没有标准化工具。LLM 擅长处理模糊的、自然语言描述的主观判断，这正好是痛点。" |
+| "数据从哪来？" | "Fragrantica 有 10 万+公开香水信息和用户投票，Good Scents Company 有公开配方数据，IFRA 法规也是公开的。" |
+| "怎么评估？" | "多维度。香调识别用 Fragrantica 用户投票作为 ground truth；评分用 Kendall τ 衡量排名一致性；还做了消融实验量化每个模块的贡献。" |
+| "Agent 间怎么协作？" | "LangGraph 定义 DAG，主控 Agent 先调度香调拆解和合规检查（可并行），结果汇总后再调度文案生成和偏好预测（依赖前序输出）。" |
+| "遇到什么困难？" | "评香词汇高度专业化且存在个体差异，few-shot 的构造非常关键。最初用通用 prompt 准确率只有 40%，引入 5-8 条专业评香师范例后提升到 65%+。" |
+| "为什么不微调？" | "理论上微调更好。但我故意先做 RAG + few-shot 验证可行性（数据量小时更适合），等积累到足够标注数据再微调。这也是工业界的务实做法。" |
+
+预期效果 vs 投入
+
+| 维度 | 评估 |
+|------|------|
+| 技术难度 | ⭐⭐⭐⭐（Agent + RAG + 多维度评估，不是调 API） |
+| 独特程度 | ⭐⭐⭐⭐⭐（全国几乎没有同类项目） |
+| 面试话题性 | ⭐⭐⭐⭐⭐（评香这个话题本身就吸引人） |
+| 对 DSM 经历的利用 | ⭐⭐⭐⭐⭐（领域知识直接转化为 few-shot 和 evaluation 设计） |
+| 实施周期 | 4-6 周（业余时间） |
+| 最低可行版本 | 1-2 周（单一香调拆解 + 基础评测） |
+
+快速启动路径
+
+我建议分三步走，每步都能独立展示：
+
+1. Week 1-2：爬 Fragrantica 数据 + 做一个最简单的 prompt（"请分析这款香水的三调"）→ 跟 Fragrantica 投票对比 → 算出准确率基线。这一步做完已经有东西可聊了。
+2. Week 2-4：加 RAG（配方库 + IFRA 法规），写 LangGraph Agent，做消融实验对比
+3. Week 4-6：完善评估框架，做 Gradio demo，写技术博客/README
+
+要不要我直接帮你写：
+- 项目 README 骨架？
+- 核心代码框架（数据爬虫 + Agent 定义 + 评估脚本）？
+- 或者先帮你爬一份 Fragrantica 数据看看质量？

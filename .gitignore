@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Environment
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code local
+.claude/
+settings.local.json
+history.json
+
+# Unsloth compiled cache
+unsloth_compiled_cache/
+.locks/
+*.tar.gz.tmp
+
+# Test/debug artifacts
+Practicaldsm-firmenich_worktest_en_raw.json
+
+# Results (generated)
+results/*.json

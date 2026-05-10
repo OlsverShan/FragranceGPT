@@ -1,0 +1,31 @@
+# Core
+pandas>=2.0
+numpy>=1.24
+openai>=1.0
+
+# RAG
+chromadb>=0.4
+sentence-transformers>=2.2
+
+# Fuzzy matching
+python-Levenshtein>=0.25
+
+# Multi-Agent
+langgraph>=0.0.30
+
+# Web App
+streamlit>=1.28
+
+# Backend (FastAPI + WebSocket)
+fastapi>=0.100
+uvicorn>=0.23
+websocket-client>=1.6
+
+# Rating Predictor
+xgboost>=2.0
+scikit-learn>=1.3
+scipy>=1.10
+
+# Visualization
+plotly>=5.17
+matplotlib>=3.7

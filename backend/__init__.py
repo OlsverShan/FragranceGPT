@@ -1,0 +1,1 @@
+"""FragranceGPT Backend — FastAPI + AsyncOpenAI"""
